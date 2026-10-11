@@ -8,6 +8,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head><body>
+<div id="login"><form class="lg" onsubmit="login();return false">
+ <div class="brand"><b>Om Style</b><span>Delhi</span></div>
+ <p class="sm">Admin login</p>
+ <label>Username</label><input id="lu" autocomplete="username" autofocus>
+ <label style="margin-top:10px">Password</label><input id="lp" type="password" autocomplete="current-password">
+ <p id="le" class="le"></p>
+ <button class="btn big" type="submit">Login</button>
+</form></div>
 <aside class="side">
  <div class="brand"><b>Om Style</b><span>Delhi</span></div>
  <nav id="nv">
@@ -16,7 +24,7 @@
   <button data-p="h"><i>☰</i>History</button>
   <button data-p="x"><i>⚙</i>Settings</button>
  </nav>
- <div class="shop">B-1, Main Ismailpur Road<br>Jaitpur - 110044<br>📞 9599126467</div>
+ <div class="shop"><button class="btn ghost s" onclick="logout()" style="margin-bottom:12px">Logout</button><br>B-1, Main Ismailpur Road<br>Jaitpur - 110044<br>📞 9599126467</div>
 </aside>
 
 <main>
@@ -72,6 +80,7 @@
   <p class="sm">Ek baar folder chuno. Har bill ka PDF us folder me <b>aaj ki date ke naam ke folder</b> me (jaise 2026-10-11) apne aap ban kar save hoga, aur <b>OmStyle_Data.xlsx</b> bhi update hoga. Sirf Chrome / Edge (computer) me chalta hai.</p>
   <p>Selected: <b id="fn">Koi folder nahi chuna</b></p>
   <button class="btn" onclick="chooseFolder()">Choose folder</button></div>
+ <div class="card"><h3>Admin</h3><p class="sm">Logged in as admin. Computer chhodne se pehle logout karo.</p><button class="btn ghost" onclick="logout()">Logout</button></div>
  <div class="card"><h3>Out-of-stock mail</h3><div class="g">
   <div class="w2"><label>Mail kis email pe aaye?</label><input id="em" type="email" placeholder="you@gmail.com"></div>
   <div><label>Har bill ke baad Excel download</label><select id="au"><option value="0">No</option><option value="1">Yes</option></select></div></div>
