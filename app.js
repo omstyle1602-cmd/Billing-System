@@ -128,3 +128,13 @@ const xl=only=>XLSX.writeFile(book(only),only=='c'?'OmStyle_Customers.xlsx':'OmS
 
 async function draw(){drawRows();drawStock();drawHist();$('#em').value=db.email;$('#au').value=db.auto;const h=await hget();if(h)$('#fn').textContent=h.name}
 loadDraft();draw();
+
+/* admin login (browser-side gate) */
+const AUTH='ac5805d47ad16da31714270f48b677bacecf026bcdc2749dc770b08c6d197f34';let fails=0,until=0;
+const sha=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+async function login(){const e=$('#le');if(Date.now()<until)return e.textContent='Bahut galat try. '+Math.ceil((until-Date.now())/1000)+' sec baad try karo.';
+ if(!window.crypto||!crypto.subtle)return e.textContent='Secure (https) page pe kholo.';
+ if(await sha($('#lu').value.trim().toLowerCase()+'|'+$('#lp').value)===AUTH){sessionStorage.setItem('omadm','1');fails=0;e.textContent='';$('#lp').value='';document.body.classList.remove('locked');draw()}
+ else{fails++;e.textContent='Username ya password galat hai.';if(fails>=5){until=Date.now()+30000;fails=0}}}
+function logout(){sessionStorage.removeItem('omadm');$('#lu').value='';document.body.classList.add('locked')}
+if(sessionStorage.getItem('omadm')!=='1')document.body.classList.add('locked');
