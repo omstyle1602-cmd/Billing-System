@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Om Style Delhi - Billing & Stock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head><body>
+<aside class="side">
+ <div class="brand"><b>Om Style</b><span>Delhi</span></div>
+ <nav id="nv">
+  <button data-p="b" class="on"><i>◧</i>New Bill</button>
+  <button data-p="s"><i>▦</i>Stock</button>
+  <button data-p="h"><i>☰</i>History</button>
+  <button data-p="x"><i>⚙</i>Settings</button>
+ </nav>
+ <div class="shop">B-1, Main Ismailpur Road<br>Jaitpur - 110044<br>📞 9599126467</div>
+</aside>
+
+<main>
+<section id="b" class="pg on">
+ <h2>New Bill</h2>
+ <div class="bill-grid">
+  <div>
+   <div class="card"><h3>Customer</h3><div class="g">
+    <div><label>Name *</label><input id="cn" placeholder="Customer ka naam" oninput="calc()"></div>
+    <div><label>Mobile *</label><input id="cp" type="tel" maxlength="12" placeholder="10 digit number"></div>
+    <div class="w2"><label>Address</label><input id="ca" placeholder="Optional"></div>
+    <div><label>Payment</label><select id="pm"><option>Cash</option><option>UPI</option><option>Card</option></select></div>
+   </div></div>
+   <div class="card"><h3>Items</h3><datalist id="sl"></datalist>
+    <div id="rb"></div>
+    <button class="btn ghost" onclick="addRow()">+ Add item</button>
+   </div>
+  </div>
+  <aside class="receipt"><div class="rt"><small>Invoice</small><b id="rn">OS-0001</b></div>
+   <div class="rbody">
+    <div class="rcu" id="rc">Customer name</div>
+    <div id="rl" class="rl"></div>
+    <div class="ln"><span>Subtotal</span><b id="st">₹0.00</b></div>
+    <div class="ln"><span>Discount <input id="dp" type="number" min="0" max="100" value="0" oninput="calc()">%</span><b id="da">- ₹0.00</b></div>
+    <div class="fin"><span>Final amount</span><b id="ft">₹0.00</b></div>
+    <button class="btn big" onclick="gen()">Generate invoice</button>
+    <p class="tc">No Return, only Replace within 3 days · Fixed Price</p>
+   </div></aside>
+ </div>
+</section>
+
+<section id="s" class="pg">
+ <h2>Stock</h2>
+ <div class="card"><h3>Add stock</h3><div class="g">
+  <div class="w2"><label>Item name *</label><input id="sn" placeholder="e.g. Men Shirt Blue L"></div>
+  <div><label>Quantity *</label><input id="sq" type="number" min="1" value="1"></div>
+  <div><label>Price ₹</label><input id="sp" type="number" min="0" placeholder="Selling price"></div>
+  <div class="ae"><button class="btn" onclick="addStock()">Add to stock</button></div></div>
+  <p class="sm">Same naam ka item ho to quantity usme jud jati hai.</p></div>
+ <div class="card"><h3>Current stock</h3><div class="tw"><table><thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Status</th><th>Add / Remove</th><th></th></tr></thead><tbody id="sb"></tbody></table></div></div>
+</section>
+
+<section id="h" class="pg">
+ <h2>History</h2>
+ <div class="stats" id="stt"></div>
+ <div class="card"><div class="bar"><h3>Invoices</h3><span><button class="btn ghost" onclick="xl('c')">Customers Excel</button> <button class="btn" onclick="xl()">Export all to Excel</button></span></div>
+ <div class="tw"><table><thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Total</th><th></th></tr></thead><tbody id="hb"></tbody></table></div></div>
+</section>
+
+<section id="x" class="pg">
+ <h2>Settings</h2>
+ <div class="card"><h3>Auto-save folder</h3>
+  <p class="sm">Ek baar folder chuno. Har bill ka PDF us folder me <b>aaj ki date ke naam ke folder</b> me (jaise 2026-10-11) apne aap ban kar save hoga, aur <b>OmStyle_Data.xlsx</b> bhi update hoga. Sirf Chrome / Edge (computer) me chalta hai.</p>
+  <p>Selected: <b id="fn">Koi folder nahi chuna</b></p>
+  <button class="btn" onclick="chooseFolder()">Choose folder</button></div>
+ <div class="card"><h3>Out-of-stock mail</h3><div class="g">
+  <div class="w2"><label>Mail kis email pe aaye?</label><input id="em" type="email" placeholder="you@gmail.com"></div>
+  <div><label>Har bill ke baad Excel download</label><select id="au"><option value="0">No</option><option value="1">Yes</option></select></div></div>
+  <p class="sm">Pehli baar FormSubmit ek confirmation mail bhejega, usme Activate pe click karo.</p>
+  <button class="btn" onclick="saveSet()">Save settings</button> <button class="btn ghost" onclick="mail({name:'TEST ITEM'},true)">Send test mail</button></div>
+</section>
+</main>
+
+<div id="md"><div class="card"><h3>Invoice <span id="mn"></span> ready</h3>
+ <p id="sv" class="sm"></p>
+ <label>Customer WhatsApp no</label><input id="wp" type="tel">
+ <label style="margin-top:10px">Message</label><textarea id="wm" rows="9"></textarea>
+ <p class="sm">PDF bill message ke saath attach / download hogi.</p>
+ <div class="row"><button class="btn wa" onclick="wa()">Send on WhatsApp</button><button class="btn ghost" onclick="dl()">PDF</button><button class="btn ghost" onclick="$('#md').style.display='none'">Close</button></div></div></div>
+<div id="toast"></div>
+<script src="js/app.js"></script>
+</body></html>
